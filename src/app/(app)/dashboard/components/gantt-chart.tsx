@@ -3,7 +3,7 @@
 
 import type { CSSProperties } from 'react';
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, type TooltipPayload } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { Task } from '@/app/(app)/workspace/components/kanban-board';
 
@@ -24,6 +24,15 @@ interface GanttChartDataItem {
   id: string;
   status?: string; 
   description?: string;
+}
+
+// Define the type for the 'entry' parameter in the tooltip formatter
+interface TooltipFormatterEntry {
+  payload: GanttChartDataItem;
+  name: string; // Corresponds to the 'name' (second) argument of the formatter
+  value: [number, number]; // Corresponds to the 'value' (first) argument of the formatter
+  color?: string; // Optional: color of the bar
+  dataKey?: string; // Optional: dataKey
 }
 
 export function GanttChart() {
@@ -150,17 +159,16 @@ export function GanttChart() {
               formatter={(
                 value: [number, number], 
                 name: string,           
-                entry: TooltipPayload<[number, number], string> 
+                entry: TooltipFormatterEntry 
               ) => {
-                const taskData = entry.payload as GanttChartDataItem; 
+                const taskData = entry.payload; 
                 if (name === 'range' && taskData && typeof taskData.status === 'string') {
-                  const { status, description } = taskData;
-                  const formattedDescription = description
-                    ? `<br/><em>${description.substring(0, 100)}${description.length > 100 ? '...' : ''}</em>`
+                  const formattedDescription = taskData.description
+                    ? `<br/><em>${taskData.description.substring(0, 100)}${taskData.description.length > 100 ? '...' : ''}</em>`
                     : '';
-                  return [`Status: ${status}${formattedDescription}`, null];
+                  return [`Status: ${taskData.status}${formattedDescription}`, null];
                 }
-                return [`${value[0]} - ${value[1]}`, name]; 
+                return [`Duration: Day ${value[0]} - Day ${value[1]}`, null]; 
               }}
               labelFormatter={(label: string) => `Task: ${label}`}
             />
