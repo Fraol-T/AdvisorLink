@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -6,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Paperclip, Send, Smile } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardFooter } from '@/components/ui/card';
 
 interface Message {
   id: string;
@@ -118,3 +119,7 @@ export default function ChatPage() {
             <span className="sr-only">Send message</span>
           </Button>
         </form>
+      </CardFooter>
+    </div>
+  );
+}
