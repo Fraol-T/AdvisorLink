@@ -1,6 +1,8 @@
+
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,7 +30,7 @@ function SubmitButton() {
 }
 
 export function SubmissionForm() {
-  const [state, formAction] = useFormState(submitGroupTitleAction, initialState);
+  const [state, formAction] = useActionState(submitGroupTitleAction, initialState);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {

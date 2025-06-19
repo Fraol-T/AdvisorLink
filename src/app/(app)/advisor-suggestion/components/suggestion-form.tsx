@@ -1,7 +1,8 @@
 
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,7 +29,7 @@ function SubmitButton() {
 }
 
 export function SuggestionForm() {
-  const [state, formAction] = useFormState(suggestAdvisorsAction, initialState);
+  const [state, formAction] = useActionState(suggestAdvisorsAction, initialState);
 
   return (
     <Card className="w-full max-w-2xl mx-auto shadow-xl">
