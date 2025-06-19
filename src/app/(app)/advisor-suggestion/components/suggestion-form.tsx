@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
@@ -104,9 +105,15 @@ export function SuggestionForm() {
           </div>
         </div>
       )}
-      {state.suggestions && state.suggestions.length === 0 && state.message && !state.errors &&(
+      {state.suggestions && state.suggestions.length === 0 && state.message && !state.errors && (
          <div className="p-6 border-t">
             <Alert variant="default" className="w-full">
                 <Info className="h-4 w-4" />
                 <AlertTitle>No Suggestions Found</AlertTitle>
-                <AlertDescription>{state.message
+                <AlertDescription>{state.message}</AlertDescription>
+            </Alert>
+         </div>
+      )}
+    </Card>
+  );
+}
