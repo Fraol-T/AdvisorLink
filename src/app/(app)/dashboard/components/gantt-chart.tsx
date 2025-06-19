@@ -26,13 +26,16 @@ interface GanttChartDataItem {
   description?: string;
 }
 
-// Define the type for the 'entry' parameter in the tooltip formatter
+// Define the type for the 'entry' parameter (the third argument) in the tooltip formatter.
+// This 'entry' object is Recharts' internal Payload object for the hovered bar.
+// The 'payload' property *within* this entry object holds our original GanttChartDataItem.
+// Recharts types this internal 'payload' property as optional.
 interface TooltipFormatterEntry {
-  payload: GanttChartDataItem;
-  name: string; // Corresponds to the 'name' (second) argument of the formatter
-  value: [number, number]; // Corresponds to the 'value' (first) argument of the formatter
-  color?: string; // Optional: color of the bar
-  dataKey?: string; // Optional: dataKey
+  payload?: GanttChartDataItem; // Made optional to match Recharts' Payload type.
+  name: string; // Corresponds to the dataKey of the bar, e.g., "range"
+  value: [number, number]; // The value for this dataKey, e.g., [startDay, endDay]
+  color?: string; 
+  dataKey?: string;
 }
 
 export function GanttChart() {
@@ -157,16 +160,19 @@ export function GanttChart() {
               }}
               labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}
               formatter={(
-                value: [number, number], 
-                name: string,           
-                entry: TooltipFormatterEntry 
+                value: [number, number], // Current value of the dataKey (e.g., the 'range' array)
+                name: string,           // Name of the dataKey (e.g., "range")
+                entry: TooltipFormatterEntry // The Recharts Payload object for the hovered bar
               ) => {
-                const taskData = entry.payload; 
+                const taskData = entry.payload; // This is our GanttChartDataItem (or undefined)
                 if (name === 'range' && taskData && typeof taskData.status === 'string') {
                   const formattedDescription = taskData.description
                     ? `<br/><em>${taskData.description.substring(0, 100)}${taskData.description.length > 100 ? '...' : ''}</em>`
                     : '';
-                  return [`Status: ${taskData.status}${formattedDescription}`, null];
+                  // This return will be used as the content for this item in the tooltip
+                  // Since we are returning a string with HTML, ensure your tooltip can render HTML or use a custom content component.
+                  // For basic tooltips, the string itself is rendered.
+                  return [`Status: ${taskData.status}${formattedDescription}`, null]; // null for the name part of this line item
                 }
                 return [`Duration: Day ${value[0]} - Day ${value[1]}`, null]; 
               }}
