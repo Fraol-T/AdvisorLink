@@ -3,7 +3,7 @@
 
 import type { CSSProperties } from 'react';
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, type Payload, type TooltipProps } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { Task } from '@/app/(app)/workspace/components/kanban-board';
 
@@ -24,17 +24,6 @@ interface GanttChartDataItem {
   id: string;
   status?: string;
   description?: string;
-}
-
-// Define the type for the 'entry' parameter (the third argument) in the tooltip formatter.
-// This 'entry' object is Recharts' internal Payload object for the hovered bar.
-// The 'payload' property *within* this entry object holds our original GanttChartDataItem.
-interface TooltipFormatterEntry {
-  payload?: GanttChartDataItem; // This is our GanttChartDataItem from the chart data
-  name?: string; // Corresponds to the dataKey of the bar, e.g., "range". Recharts types this as optional.
-  value: [number, number]; // The value for this dataKey, e.g., [startDay, endDay]
-  color?: string;
-  dataKey?: string;
 }
 
 export function GanttChart() {
@@ -159,17 +148,20 @@ export function GanttChart() {
               }}
               labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}
               formatter={(
-                value: [number, number], // Current value of the dataKey (e.g., the 'range' array)
-                name: string,           // Name of the dataKey (e.g., "range")
-                entry: TooltipFormatterEntry // The Recharts Payload object for the hovered bar
+                value: [number, number], // Value of the dataKey for the Bar (task.range)
+                name: string, // Name of the dataKey for the Bar ("range")
+                entry: Payload<[number, number], string> // Recharts payload object for the hovered bar
               ) => {
-                const taskData = entry.payload; // This is our GanttChartDataItem (or undefined)
-                if (name === 'range' && taskData && typeof taskData.status === 'string') {
+                // entry.payload is the original GanttChartDataItem
+                if (name === 'range' && entry.payload && 'status' in entry.payload && typeof entry.payload.status === 'string') {
+                  const taskData = entry.payload as GanttChartDataItem; // Safe to cast here
+                  const statusString = taskData.status!.charAt(0).toUpperCase() + taskData.status!.slice(1);
                   const formattedDescription = taskData.description
                     ? `<br/><em>${taskData.description.substring(0, 100)}${taskData.description.length > 100 ? '...' : ''}</em>`
                     : '';
-                  return [`Status: ${taskData.status.charAt(0).toUpperCase() + taskData.status.slice(1)}${formattedDescription}`, null];
+                  return [`Status: ${statusString}${formattedDescription}`, null];
                 }
+                // Default display for other dataKeys or if payload doesn't match
                 return [`Duration: Day ${value[0]} - Day ${value[1]}`, null];
               }}
               labelFormatter={(label: string) => `Task: ${label}`}
