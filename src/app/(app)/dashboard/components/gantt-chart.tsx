@@ -3,7 +3,7 @@
 
 import type { CSSProperties } from 'react';
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, type Payload, type TooltipProps } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, type TooltipProps } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { Task } from '@/app/(app)/workspace/components/kanban-board';
 
@@ -51,11 +51,11 @@ export function GanttChart() {
 
         let currentTimelineEnd = 0;
         const processedData: GanttChartDataItem[] = tasks.map((task) => {
-            const taskDuration = 5;
+            const taskDuration = 5; // Illustrative fixed duration for each task
             
             const startDay = currentTimelineEnd;
             const endDay = startDay + taskDuration;
-            currentTimelineEnd = endDay + 1;
+            currentTimelineEnd = endDay + 1; // Add a small gap between tasks
 
             return {
               id: task.id,
@@ -103,9 +103,9 @@ export function GanttChart() {
   
   const maxEndDay = Math.max(...chartData.map(d => d.range[1]), 0);
   const chartHeightStyle: CSSProperties = {
-    height: `calc( (2.5rem * ${Math.max(chartData.length, 1)}) + 120px )`,
-    minHeight: '300px',
-    maxHeight: '80vh',
+    height: `calc( (2.5rem * ${Math.max(chartData.length, 1)}) + 120px )`, // Base height + per task height
+    minHeight: '300px', // Ensure a minimum height
+    maxHeight: '80vh', // Prevent excessive height
   };
 
 
@@ -120,22 +120,22 @@ export function GanttChart() {
           <BarChart
             data={chartData}
             layout="vertical"
-            margin={{ top: 5, right: 20, left: 20, bottom: 20 }}
+            margin={{ top: 5, right: 20, left: 20, bottom: 20 }} // Adjusted left margin for YAxis labels
           >
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis
                 type="number"
-                domain={[0, maxEndDay + 5]}
+                domain={[0, maxEndDay + 5]} // Add some padding to the X-axis domain
                 tickFormatter={(value) => `Day ${value}`}
                 stroke="hsl(var(--foreground))"
-                dy={10}
+                dy={10} // Move X-axis labels down slightly
             />
             <YAxis
                 dataKey="name"
                 type="category"
-                width={150}
+                width={150} // Increased width for longer task names
                 tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
-                interval={0}
+                interval={0} // Show all task labels
                 className="truncate"
             />
             <Tooltip
@@ -148,18 +148,20 @@ export function GanttChart() {
               }}
               labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}
               formatter={(
-                value: [number, number], // Value of the dataKey for the Bar (task.range)
-                name: string, // Name of the dataKey for the Bar ("range")
-                entry: Payload<[number, number], string> // Recharts payload object for the hovered bar
+                value: [number, number], // Current value of the dataKey (e.g., the 'range' array)
+                name: string,           // Name of the dataKey (e.g., "range")
+                // The 'entry' object contains the full data point for the hovered bar.
+                // 'entry.payload' is our GanttChartDataItem.
+                entry: { payload: GanttChartDataItem } 
               ) => {
-                // entry.payload is the original GanttChartDataItem
-                if (name === 'range' && entry.payload && 'status' in entry.payload && typeof entry.payload.status === 'string') {
-                  const taskData = entry.payload as GanttChartDataItem; // Safe to cast here
-                  const statusString = taskData.status!.charAt(0).toUpperCase() + taskData.status!.slice(1);
-                  const formattedDescription = taskData.description
-                    ? `<br/><em>${taskData.description.substring(0, 100)}${taskData.description.length > 100 ? '...' : ''}</em>`
+                // The 'name' prop will be the dataKey of the Bar, which is "range"
+                const taskData = entry.payload;
+                if (name === 'range' && taskData && 'status' in taskData && typeof taskData.status === 'string') {
+                  const statusString = taskData.status.charAt(0).toUpperCase() + taskData.status.slice(1);
+                  const descriptionString = taskData.description 
+                    ? `<br/><em>${taskData.description.substring(0, 100)}${taskData.description.length > 100 ? '...' : ''}</em>` 
                     : '';
-                  return [`Status: ${statusString}${formattedDescription}`, null];
+                  return [`Status: ${statusString}${descriptionString}`, null];
                 }
                 // Default display for other dataKeys or if payload doesn't match
                 return [`Duration: Day ${value[0]} - Day ${value[1]}`, null];
