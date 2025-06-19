@@ -42,7 +42,7 @@ export function NavLinks() {
 
   const renderLink = (link: { href: string; label: string; icon: React.ElementType }, index: number) => (
     <SidebarMenuItem key={`${link.label}-${index}`}>
-      <Link href={link.href} legacyBehavior passHref>
+      <Link href={link.href}>
         <SidebarMenuButton
           isActive={pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href))}
           tooltip={{ children: link.label, className: "font-body" }}
@@ -77,7 +77,7 @@ export function HelpNavLinks() {
   const pathname = usePathname();
   const renderLink = (link: { href: string; label: string; icon: React.ElementType }, index: number) => (
     <SidebarMenuItem key={`${link.label}-${index}`}>
-      <Link href={link.href} legacyBehavior passHref>
+      <Link href={link.href}>
         <SidebarMenuButton
           isActive={pathname === link.href}
           tooltip={{ children: link.label, className: "font-body" }}
