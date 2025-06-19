@@ -3,7 +3,7 @@
 
 import type { CSSProperties } from 'react';
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, type Payload as RechartsPayload } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, type TooltipPayload } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { Task } from '@/app/(app)/workspace/components/kanban-board';
 
@@ -148,11 +148,11 @@ export function GanttChart() {
               }}
               labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}
               formatter={(
-                value: [number, number], // value for dataKey 'range'
-                name: string,           // dataKey 'range'
-                entry: RechartsPayload<[number, number], string> // entry.payload is GanttChartDataItem
+                value: [number, number], 
+                name: string,           
+                entry: TooltipPayload<[number, number], string> 
               ) => {
-                const taskData = entry.payload as GanttChartDataItem;
+                const taskData = entry.payload as GanttChartDataItem; 
                 if (name === 'range' && taskData && typeof taskData.status === 'string') {
                   const { status, description } = taskData;
                   const formattedDescription = description
@@ -160,7 +160,7 @@ export function GanttChart() {
                     : '';
                   return [`Status: ${status}${formattedDescription}`, null];
                 }
-                return [`${value[0]} - ${value[1]}`, name]; // Fallback
+                return [`${value[0]} - ${value[1]}`, name]; 
               }}
               labelFormatter={(label: string) => `Task: ${label}`}
             />
