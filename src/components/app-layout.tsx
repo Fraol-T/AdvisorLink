@@ -33,7 +33,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </SidebarContent>
         </ScrollArea>
         <SidebarFooter className="mt-auto border-t border-sidebar-border">
-          <HelpNavLinks/>
+          <HelpNavLinks />
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
@@ -41,4 +41,10 @@ export function AppLayout({ children }: AppLayoutProps) {
           <SidebarTrigger className="hidden md:group-data-[state=collapsed]/sidebar-wrapper:group-data-[collapsible=icon]/sidebar-wrapper:flex" />
           <UserNav />
         </header>
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          {children}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}
