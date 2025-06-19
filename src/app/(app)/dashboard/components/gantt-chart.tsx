@@ -9,32 +9,31 @@ import type { Task } from '@/app/(app)/workspace/components/kanban-board';
 
 const getTaskColor = (status: string | undefined) => {
   switch (status) {
-    case 'todo': return 'hsl(var(--chart-5))'; 
-    case 'inprogress': return 'hsl(var(--chart-2))'; 
-    case 'review': return 'hsl(var(--chart-4))'; 
-    case 'done': return 'hsl(var(--chart-1))'; 
-    default: return 'hsl(var(--chart-3))'; 
+    case 'todo': return 'hsl(var(--chart-5))';
+    case 'inprogress': return 'hsl(var(--chart-2))';
+    case 'review': return 'hsl(var(--chart-4))';
+    case 'done': return 'hsl(var(--chart-1))';
+    default: return 'hsl(var(--chart-3))';
   }
 };
 
 interface GanttChartDataItem {
-  name: string; 
-  range: [number, number]; 
+  name: string;
+  range: [number, number];
   fill: string;
   id: string;
-  status?: string; 
+  status?: string;
   description?: string;
 }
 
 // Define the type for the 'entry' parameter (the third argument) in the tooltip formatter.
 // This 'entry' object is Recharts' internal Payload object for the hovered bar.
 // The 'payload' property *within* this entry object holds our original GanttChartDataItem.
-// Recharts types this internal 'payload' property as optional.
 interface TooltipFormatterEntry {
-  payload?: GanttChartDataItem; // Made optional to match Recharts' Payload type.
-  name: string; // Corresponds to the dataKey of the bar, e.g., "range"
+  payload?: GanttChartDataItem; // This is our GanttChartDataItem from the chart data
+  name?: string; // Corresponds to the dataKey of the bar, e.g., "range". Recharts types this as optional.
   value: [number, number]; // The value for this dataKey, e.g., [startDay, endDay]
-  color?: string; 
+  color?: string;
   dataKey?: string;
 }
 
@@ -63,11 +62,11 @@ export function GanttChart() {
 
         let currentTimelineEnd = 0;
         const processedData: GanttChartDataItem[] = tasks.map((task) => {
-            const taskDuration = 5; 
+            const taskDuration = 5;
             
             const startDay = currentTimelineEnd;
             const endDay = startDay + taskDuration;
-            currentTimelineEnd = endDay + 1; 
+            currentTimelineEnd = endDay + 1;
 
             return {
               id: task.id,
@@ -115,9 +114,9 @@ export function GanttChart() {
   
   const maxEndDay = Math.max(...chartData.map(d => d.range[1]), 0);
   const chartHeightStyle: CSSProperties = {
-    height: `calc( (2.5rem * ${Math.max(chartData.length, 1)}) + 120px )`, 
+    height: `calc( (2.5rem * ${Math.max(chartData.length, 1)}) + 120px )`,
     minHeight: '300px',
-    maxHeight: '80vh', 
+    maxHeight: '80vh',
   };
 
 
@@ -127,33 +126,33 @@ export function GanttChart() {
         <CardTitle className="font-headline text-2xl">Project Timeline</CardTitle>
         <CardDescription>Illustrative Gantt-style view of workspace tasks. Durations are examples.</CardDescription>
       </CardHeader>
-      <CardContent style={chartHeightStyle} className="pr-4 md:pr-6"> 
+      <CardContent style={chartHeightStyle} className="pr-4 md:pr-6">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
             layout="vertical"
-            margin={{ top: 5, right: 20, left: 20, bottom: 20 }} 
+            margin={{ top: 5, right: 20, left: 20, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis 
-                type="number" 
-                domain={[0, maxEndDay + 5]} 
-                tickFormatter={(value) => `Day ${value}`} 
-                stroke="hsl(var(--foreground))" 
-                dy={10} 
+            <XAxis
+                type="number"
+                domain={[0, maxEndDay + 5]}
+                tickFormatter={(value) => `Day ${value}`}
+                stroke="hsl(var(--foreground))"
+                dy={10}
             />
-            <YAxis 
-                dataKey="name" 
-                type="category" 
-                width={150} 
-                tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }} 
-                interval={0} 
-                className="truncate" 
+            <YAxis
+                dataKey="name"
+                type="category"
+                width={150}
+                tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
+                interval={0}
+                className="truncate"
             />
             <Tooltip
               cursor={{ fill: 'hsl(var(--muted))', opacity: 0.3 }}
-              contentStyle={{ 
-                backgroundColor: 'hsl(var(--background))', 
+              contentStyle={{
+                backgroundColor: 'hsl(var(--background))',
                 border: '1px solid hsl(var(--border))',
                 borderRadius: 'var(--radius)',
                 boxShadow: 'var(--shadow-lg)',
@@ -169,12 +168,9 @@ export function GanttChart() {
                   const formattedDescription = taskData.description
                     ? `<br/><em>${taskData.description.substring(0, 100)}${taskData.description.length > 100 ? '...' : ''}</em>`
                     : '';
-                  // This return will be used as the content for this item in the tooltip
-                  // Since we are returning a string with HTML, ensure your tooltip can render HTML or use a custom content component.
-                  // For basic tooltips, the string itself is rendered.
-                  return [`Status: ${taskData.status}${formattedDescription}`, null]; // null for the name part of this line item
+                  return [`Status: ${taskData.status.charAt(0).toUpperCase() + taskData.status.slice(1)}${formattedDescription}`, null];
                 }
-                return [`Duration: Day ${value[0]} - Day ${value[1]}`, null]; 
+                return [`Duration: Day ${value[0]} - Day ${value[1]}`, null];
               }}
               labelFormatter={(label: string) => `Task: ${label}`}
             />
