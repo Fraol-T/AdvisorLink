@@ -123,3 +123,4 @@ export async function submitGroupTitleAction(prevState: TitleSubmissionState, fo
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   return { message: `Project title "${projectTitle}" for group "${groupName}" submitted successfully!`, success: true };
+}
