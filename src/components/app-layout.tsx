@@ -1,3 +1,4 @@
+
 import type { ReactNode } from 'react';
 import {
   SidebarProvider,
@@ -24,6 +25,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <SidebarHeader className="border-b border-sidebar-border">
           <div className="flex items-center justify-between p-2 group-data-[collapsible=icon]:justify-center">
             <Logo className="group-data-[collapsible=icon]:hidden" />
+            {/* This trigger is for closing the sidebar from within, on mobile (sheet view) */}
             <SidebarTrigger className="md:hidden" />
           </div>
         </SidebarHeader>
@@ -37,8 +39,14 @@ export function AppLayout({ children }: AppLayoutProps) {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur md:justify-end">
-          <SidebarTrigger className="hidden md:group-data-[state=collapsed]/sidebar-wrapper:group-data-[collapsible=icon]/sidebar-wrapper:flex" />
+        {/* Main application header */}
+        <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur">
+          {/* This trigger handles:
+              - Opening the sidebar on mobile (it becomes a Sheet).
+              - Opening the sidebar on desktop when it's collapsed to icons.
+              - It's hidden on desktop when the sidebar is expanded.
+          */}
+          <SidebarTrigger className="md:group-data-[state=expanded]/sidebar-wrapper:hidden" />
           <UserNav />
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
