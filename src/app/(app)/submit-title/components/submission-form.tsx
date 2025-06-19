@@ -100,4 +100,10 @@ export function SubmissionForm() {
               {state.success ? <CheckCircle className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
               <AlertTitle>{state.success ? "Success!" : "Error"}</AlertTitle>
               <AlertDescription>{state.message}</AlertDescription>
-            </
+            </Alert>
+          )}
+        </CardFooter>
+      </form>
+    </Card>
+  );
+}
