@@ -28,7 +28,7 @@ export function KanbanColumn({
 }: KanbanColumnProps) {
   return (
     <div className="bg-muted/50 rounded-lg p-4 flex flex-col h-full min-w-[300px] max-h-[calc(100vh-18rem)] shadow-sm">
-      <h2 className="text-xl font-semibold mb-4 text-primary font-headline sticky top-0 bg-muted/50 py-2 z-10">
+      <h2 className="text-xl font-semibold mb-4 text-primary font-headline sticky top-0 bg-muted/50 py-2 z-10 truncate">
         {column.title} ({tasks.length})
       </h2>
       <ScrollArea className="flex-grow pr-3 -mr-3">

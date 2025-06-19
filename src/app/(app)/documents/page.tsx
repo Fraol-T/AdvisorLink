@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Upload, FileText, Download, Trash2, Folder, Search, Filter, Users } from "lucide-react";
+import { Upload, FileText, Download, Trash2, Folder, Search, Filter, Users, MoreHorizontal } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import {
   DropdownMenu,
@@ -15,7 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
 
 interface Document {
   id: string;
@@ -70,7 +69,6 @@ export default function DocumentsPage() {
     
     setIsUploading(false);
     setSelectedFile(null); 
-    // Reset file input if possible, or clear its visual selection
     const fileInput = document.getElementById('file-upload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   };
@@ -125,12 +123,12 @@ export default function DocumentsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead><Folder className="inline-block mr-1 h-4 w-4 text-muted-foreground"/>Name</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Size</TableHead>
-                <TableHead>Last Modified</TableHead>
-                <TableHead>Shared With</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="whitespace-nowrap"><Folder className="inline-block mr-1 h-4 w-4 text-muted-foreground"/>Name</TableHead>
+                <TableHead className="whitespace-nowrap">Type</TableHead>
+                <TableHead className="whitespace-nowrap">Size</TableHead>
+                <TableHead className="whitespace-nowrap">Last Modified</TableHead>
+                <TableHead className="whitespace-nowrap">Shared With</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

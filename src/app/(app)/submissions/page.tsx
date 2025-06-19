@@ -85,12 +85,12 @@ export default function SubmissionsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Project Title</TableHead>
-                <TableHead>Group Name</TableHead>
-                <TableHead>Advisor</TableHead>
-                <TableHead>Submitted Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="whitespace-nowrap">Project Title</TableHead>
+                <TableHead className="whitespace-nowrap">Group Name</TableHead>
+                <TableHead className="whitespace-nowrap">Advisor</TableHead>
+                <TableHead className="whitespace-nowrap">Submitted Date</TableHead>
+                <TableHead className="whitespace-nowrap">Status</TableHead>
+                <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
