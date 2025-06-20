@@ -96,7 +96,7 @@ export function GanttChart() {
 
       return {
         name: task.title,
-        range: [startDate.getTime(), endDate.getTime()],
+        range: [startDate.getTime(), endDate.getTime()] as [number, number], // Explicitly cast to tuple
         status: statusDisplay,
         color: getStatusColor(task.columnId),
         description: task.description,
@@ -114,9 +114,8 @@ export function GanttChart() {
 
   }, [isMounted]);
 
-  const CustomTooltip = ({ active, payload }: TooltipProps<[number, number], string>) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps<number | [number, number], string | number>) => {
     if (active && payload && payload.length) {
-      // payload[0].payload is the GanttChartDataItem
       const taskData = payload[0].payload as GanttChartDataItem;
 
       if (!taskData || !taskData.actualStartDate || !taskData.actualEndDate) return null;
@@ -138,6 +137,7 @@ export function GanttChart() {
     }
     return null;
   };
+  
 
   if (!isMounted || ganttData.length === 0) {
     return (
@@ -211,3 +211,4 @@ export function GanttChart() {
     </Card>
   );
 }
+
