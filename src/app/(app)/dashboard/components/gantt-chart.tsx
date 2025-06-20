@@ -3,8 +3,7 @@
 
 import type { CSSProperties } from 'react';
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell } from 'recharts';
-import type { TooltipProps } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell, type TooltipProps } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { Task } from '@/app/(app)/workspace/components/kanban-board';
 import { addDays, format, differenceInDays, startOfDay } from 'date-fns';
@@ -21,7 +20,6 @@ interface GanttChartDataItem {
 }
 
 // Dummy task data similar to what might come from kanban-board or an API
-// In a real app, you'd fetch this or pass it as props.
 const mockTasks: Task[] = [
   { id: 'task-1', title: 'Project Proposal Draft', description: 'Complete the first draft of the project proposal document, including scope, objectives, and methodology.', columnId: 'todo', priority: 'high', tags: ['writing', 'planning'] },
   { id: 'task-2', title: 'Literature Review - Phase 1', description: 'Gather and review 10 key academic papers related to the project topic.', columnId: 'todo', priority: 'medium', tags: ['research'] },
@@ -116,9 +114,9 @@ export function GanttChart() {
 
   }, [isMounted]);
 
-  const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps<[number, number], string>) => {
     if (active && payload && payload.length) {
-      // The custom data (GanttChartDataItem) is nested in payload[0].payload
+      // payload[0].payload is the GanttChartDataItem
       const taskData = payload[0].payload as GanttChartDataItem;
 
       if (!taskData || !taskData.actualStartDate || !taskData.actualEndDate) return null;
@@ -158,9 +156,9 @@ export function GanttChart() {
   const uniqueStatuses = Array.from(new Set(ganttData.map(item => item.status)))
     .map(status => ({
       value: status,
-      type: 'square' as const, // Ensures 'square' is treated as a literal type for Recharts Legend
+      type: 'square' as const,
       id: status,
-      color: getStatusColor(Object.keys(statusMapping).find(key => statusMapping[key] === status) || status)
+      color: getStatusColor(Object.keys(statusMapping).find(key => statusMapping[key] === status) || status.toLowerCase())
     }));
 
   return (
